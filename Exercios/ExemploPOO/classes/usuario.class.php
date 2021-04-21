@@ -41,8 +41,10 @@ Class Usuario extends TipoPessoa implements iUsuario{
                             ');
 
         if($stmt->execute([':cpf' => $this->cpf, ':nome' => $this->nome])){
+            echo "Usuário criado!";
             return true;
         }else{
+            echo "Falha ao criar usuário!";
             return false;
         }
 
@@ -58,11 +60,40 @@ Class Usuario extends TipoPessoa implements iUsuario{
                             ');
 
         if($stmt->execute([':cpf' => $this->cpf, ':nome' => $this->nome, ':id' => $this->id])){
+            echo "Usuário alterado!";
             return true;
         }else{
+            echo "Falha ao alterar usuário " . $this->id . "!";
             return false;
         }
 
+    }
+
+    public function delete(): bool{
+
+        $stmt = $this->prepare('DELETE FROM TB_USUARIO WHERE id = :id');
+        $stmt->bindParam(':id', $this->id);
+
+        if($stmt->execute()){
+            echo "Usuário $this->id apagado com sucesso!";
+            return true;
+        }else{
+            echo "Erro ao apagar o usuário $this->id!";
+            return false;
+        }
+    }
+
+    public function getAll(): array{
+
+        $stmt = $this->prepare('SELECT * FROM TB_USUARIO');
+
+        if($stmt->execute()){
+            $dados = $stmt->fetchAll();
+            return $dados;
+        }else{
+            echo "Erro ao consultar";
+            exit();
+        }
     }
 
     public function getDados(int $id_usuario):array{
